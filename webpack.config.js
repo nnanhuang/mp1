@@ -1,5 +1,4 @@
 const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
@@ -24,8 +23,8 @@ module.exports = {
         use: ["style-loader", "css-loader", "postcss-loader", "sass-loader"],
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: "asset",
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif|mp4)$/i,
+        type: "asset/resource",
       },
       {
         test: /\.html$/i,
@@ -34,11 +33,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new CopyPlugin({
-      patterns: [
-        { from: './assets/', to: './assets/' },
-      ],
-    }),
     new HtmlWebpackPlugin({
       template: "index.html",
       inject: 'body',
@@ -46,6 +40,10 @@ module.exports = {
   ],
   output: {
     filename: 'bundle.js',
+    // Media referenced from the HTML and the stylesheet is emitted here,
+    // so the build folder stays readable.
+    assetModuleFilename: 'assets/[hash][ext][query]',
     path: path.resolve(__dirname, "build"),
+    clean: true,
   },
 };

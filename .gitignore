@@ -7,3 +7,9 @@ public/*
 .DS_Store
 dist/
 dist/*
+
+# 原始未压缩素材（压缩版在 src/assets）
+/assets/
+
+# 构建产物由 GitHub Actions 生成
+build/

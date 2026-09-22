@@ -1,0 +1,66 @@
+@use "sass:map";
+@use "variables" as *;
+
+// =====================================================
+//  Mixins
+// =====================================================
+
+/// Media query helper. `@include respond("md") { ... }` targets
+/// viewports at or below the named breakpoint.
+@mixin respond($name) {
+  @if not map.has-key($breakpoints, $name) {
+    @error "Unknown breakpoint `#{$name}`. Expected one of #{map.keys($breakpoints)}.";
+  }
+  @media (max-width: map.get($breakpoints, $name)) {
+    @content;
+  }
+}
+
+/// Centre a box on both axes. Because it relies on flex rather than on
+/// fixed offsets, the child stays centred when the parent is resized.
+@mixin flex-center($direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: center;
+}
+
+/// The horizontal rhythm shared by every section.
+@mixin container {
+  width: 100%;
+  max-width: $container-max;
+  margin-inline: auto;
+  padding-inline: $container-gutter;
+}
+
+/// Small uppercase label that sits above a heading.
+@mixin eyebrow($color: $color-accent) {
+  margin: 0 0 $space-3;
+  color: $color;
+  font-size: $fs-eyebrow;
+  font-weight: $fw-semi;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/// A cover image or video that fills its box without distorting.
+@mixin cover-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/// Visible keyboard focus that does not fire on mouse clicks.
+@mixin focus-ring($color: $color-accent) {
+  &:focus-visible {
+    outline: 2px solid $color;
+    outline-offset: 3px;
+  }
+}
+
+/// Clamp a paragraph to a comfortable reading measure.
+@mixin measure($width: 62ch) {
+  max-width: $width;
+  margin-inline: auto;
+}

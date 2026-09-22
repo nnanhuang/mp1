@@ -1,13 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MP1</title>
-    </head>
-    <body>
-        <h1>Hello World! Welcome to MP1!</h1>
-        <img src="assets/image.jpg">
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="iPhone 18 — a concept product page built for CS409 MP1."
+    />
+    <title>iPhone 18</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20x%3D%228%22%20y%3D%221%22%20width%3D%2216%22%20height%3D%2230%22%20rx%3D%225%22%20fill%3D%22%23ff2d46%22%2F%3E%3Crect%20x%3D%2212.5%22%20y%3D%224.5%22%20width%3D%227%22%20height%3D%222%22%20rx%3D%221%22%20fill%3D%22%230b0b0d%22%2F%3E%3C%2Fsvg%3E" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body>
+    <!-- ===================== NAVBAR ===================== -->
+    <header class="navbar" id="navbar">
+      <div class="navbar__inner">
+        <a class="navbar__brand" href="#hero">
+          <i class="fa-brands fa-apple" aria-hidden="true"></i>
+          <span>iPhone 18</span>
+        </a>
+
+        <button
+          class="navbar__toggle"
+          id="navToggle"
+          type="button"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          aria-controls="navMenu"
+        >
+          <span class="navbar__toggle-bar"></span>
+          <span class="navbar__toggle-bar"></span>
+          <span class="navbar__toggle-bar"></span>
+        </button>
+
+        <nav class="navbar__nav" id="navMenu" aria-label="Main navigation">
+          <ul class="navbar__list">
+            <li><a class="navbar__link" href="#design">Design</a></li>
+            <li><a class="navbar__link" href="#features">Features</a></li>
+            <li><a class="navbar__link" href="#gallery">Gallery</a></li>
+            <li><a class="navbar__link" href="#film">Film</a></li>
+            <li><a class="navbar__link" href="#specs">Specs</a></li>
+            <li><a class="navbar__link" href="#order">Order</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="navbar__progress" id="navProgress"></div>
+    </header>
+
+    <main>
+      <!-- ===================== HERO ===================== -->
+      <section class="section hero" id="hero">
+        <div class="hero__media" aria-hidden="true"></div>
+        <div class="hero__overlay" aria-hidden="true"></div>
+
+        <div class="container hero__content">
+          <p class="hero__eyebrow">Introducing</p>
+          <h1 class="hero__title">iPhone&nbsp;18</h1>
+          <p class="hero__tagline">Light years ahead.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#order">Pre-order</a>
+            <a class="btn btn--ghost" href="#design">
+              Learn more
+              <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <a class="hero__scroll" href="#design" aria-label="Scroll to next section">
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+        </a>
+      </section>
+
+      <!-- ===================== DESIGN ===================== -->
+      <section class="section section--dark design" id="design">
+        <div class="container">
+          <header class="section__head">
+            <p class="section__eyebrow">Design</p>
+            <h2 class="section__title">Forged in titanium.</h2>
+            <p class="section__lead">
+              A grade&nbsp;5 titanium frame, a contoured edge, and the thinnest
+              borders we have ever shipped. All of it wrapped around a display
+              that reaches every corner.
+            </p>
+          </header>
+
+          <div class="design__body">
+            <div class="design__phone">
+              <div class="phone-frame">
+                <span class="phone-frame__island" aria-hidden="true"></span>
+                <video
+                  class="phone-frame__screen"
+                  src="assets/loop.mp4"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  aria-label="Looping footage of the iPhone 18 display"
+                ></video>
+              </div>
+            </div>
+
+            <ul class="design__list">
+              <li class="design__item">
+                <i class="fa-solid fa-gem" aria-hidden="true"></i>
+                <div>
+                  <h3>Titanium unibody</h3>
+                  <p>Aerospace grade, 19% lighter than stainless steel.</p>
+                </div>
+              </li>
+              <li class="design__item">
+                <i class="fa-solid fa-droplet" aria-hidden="true"></i>
+                <div>
+                  <h3>IP69 rated</h3>
+                  <p>Submersible to 8 metres for up to 60 minutes.</p>
+                </div>
+              </li>
+              <li class="design__item">
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                <div>
+                  <h3>Ceramic Shield 3</h3>
+                  <p>Four times better drop performance than any glass.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== PARALLAX BREAK (fixed background) ===================== -->
+      <section class="section parallax" id="parallax">
+        <div class="parallax__overlay" aria-hidden="true"></div>
+        <div class="container parallax__content">
+          <h2 class="parallax__title">Built for the sky.</h2>
+          <p class="parallax__text">
+            A new 3&nbsp;nm image pipeline that reads light the way your eye
+            does — from a moonless night to the brightest afternoon.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== FEATURES (multi-column) ===================== -->
+      <section class="section features" id="features">
+        <div class="container">
+          <header class="section__head">
+            <p class="section__eyebrow">Features</p>
+            <h2 class="section__title">Everything, elevated.</h2>
+          </header>
+
+          <div class="features__grid">
+            <article class="feature-card">
+              <i class="fa-solid fa-microchip feature-card__icon" aria-hidden="true"></i>
+              <h3 class="feature-card__title">A20&nbsp;Pro chip</h3>
+              <p class="feature-card__text">
+                A 6-core CPU and 20-core GPU on a 2&nbsp;nm process. Up to 40%
+                faster, at half the power.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <i class="fa-solid fa-camera-retro feature-card__icon" aria-hidden="true"></i>
+              <h3 class="feature-card__title">200&nbsp;MP Fusion</h3>
+              <p class="feature-card__text">
+                A quad-lens system with a 10x tetraprism telephoto and sensor
+                shift stabilisation on every lens.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <i class="fa-solid fa-battery-full feature-card__icon" aria-hidden="true"></i>
+              <h3 class="feature-card__title">42-hour battery</h3>
+              <p class="feature-card__text">
+                A silicon-anode cell that holds 90% of its capacity after
+                1,500&nbsp;cycles.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <i class="fa-solid fa-bolt feature-card__icon" aria-hidden="true"></i>
+              <h3 class="feature-card__title">80W MagSafe</h3>
+              <p class="feature-card__text">
+                Half a charge in twelve minutes, with no cable and no measurable
+                heat gain.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <i class="fa-solid fa-brain feature-card__icon" aria-hidden="true"></i>
+              <h3 class="feature-card__title">On-device AI</h3>
+              <p class="feature-card__text">
+                A 60&nbsp;TOPS Neural Engine runs every model locally. Nothing
+                leaves the phone.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <i class="fa-solid fa-satellite feature-card__icon" aria-hidden="true"></i>
+              <h3 class="feature-card__title">Satellite 2.0</h3>
+              <p class="feature-card__text">
+                Two-way messaging anywhere on Earth, with no line-of-sight
+                required.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== GALLERY (carousel) ===================== -->
+      <section class="section section--dark gallery" id="gallery">
+        <div class="container">
+          <header class="section__head">
+            <p class="section__eyebrow">Gallery</p>
+            <h2 class="section__title">Shot on iPhone&nbsp;18.</h2>
+          </header>
+
+          <div class="carousel" id="carousel">
+            <div class="carousel__viewport">
+              <ul class="carousel__track" id="carouselTrack">
+                <li class="carousel__slide">
+                  <img
+                    class="carousel__image"
+                    src="assets/gal-1.jpg"
+                    alt="An iPhone resting on a desk beside a keyboard and drawing tablet"
+                  />
+                  <div class="carousel__caption">
+                    <h3>Always On, refined</h3>
+                    <p>A 1&nbsp;Hz idle refresh that sips power.</p>
+                  </div>
+                </li>
+                <li class="carousel__slide">
+                  <img
+                    class="carousel__image"
+                    src="assets/gal-2.jpg"
+                    alt="An iPhone lying on weathered driftwood in bright sunlight"
+                  />
+                  <div class="carousel__caption">
+                    <h3>3,000 nits outdoors</h3>
+                    <p>Readable in direct sun, without washing out.</p>
+                  </div>
+                </li>
+                <li class="carousel__slide">
+                  <img
+                    class="carousel__image"
+                    src="assets/gal-3.jpg"
+                    alt="An iPhone mounted on a handheld gimbal in front of a decorated tree"
+                  />
+                  <div class="carousel__caption">
+                    <h3>Cinematic mode, 8K</h3>
+                    <p>Rack focus and depth capture at 60&nbsp;fps.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              class="carousel__arrow carousel__arrow--prev"
+              id="carouselPrev"
+              type="button"
+              aria-label="Previous slide"
+            >
+              <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <button
+              class="carousel__arrow carousel__arrow--next"
+              id="carouselNext"
+              type="button"
+              aria-label="Next slide"
+            >
+              <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+            </button>
+
+            <div class="carousel__dots" id="carouselDots" role="tablist" aria-label="Choose slide"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== FILM (HTML5 video) ===================== -->
+      <section class="section film" id="film">
+        <div class="container film__body">
+          <header class="film__intro">
+            <p class="section__eyebrow">Film</p>
+            <h2 class="section__title">The unboxing.</h2>
+            <p class="section__lead film__lead">
+              Eight seconds, one take, no edit. Recorded entirely on
+              iPhone&nbsp;18.
+            </p>
+
+            <ul class="film__meta">
+              <li>
+                <span class="film__meta-value">8K</span>
+                <span class="film__meta-label">ProRes</span>
+              </li>
+              <li>
+                <span class="film__meta-value">60</span>
+                <span class="film__meta-label">Frames / sec</span>
+              </li>
+              <li>
+                <span class="film__meta-value">0</span>
+                <span class="film__meta-label">Colour grades</span>
+              </li>
+            </ul>
+          </header>
+
+          <div
+            class="film__frame"
+            id="filmFrame"
+            role="button"
+            tabindex="0"
+            aria-label="Play the iPhone 18 film"
+          >
+            <video
+              class="film__video"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="assets/film-poster.jpg"
+            >
+              <source src="assets/film.mp4" type="video/mp4" />
+              Your browser does not support the HTML5 video element.
+            </video>
+
+            <span class="film__overlay" aria-hidden="true">
+              <span class="film__play">
+                <i class="fa-solid fa-play"></i>
+              </span>
+              <span class="film__hint film__hint--hover">Hover to play</span>
+              <span class="film__hint film__hint--tap">Tap to play</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== SPECS (modals) ===================== -->
+      <section class="section section--dark specs" id="specs">
+        <div class="container">
+          <header class="section__head">
+            <p class="section__eyebrow">Tech Specs</p>
+            <h2 class="section__title">Look closer.</h2>
+            <p class="section__lead">Select a card for the full breakdown.</p>
+          </header>
+
+          <div class="specs__grid">
+            <button class="spec-card" type="button" data-modal="modal-display">
+              <i class="fa-solid fa-mobile-screen spec-card__icon" aria-hidden="true"></i>
+              <h3 class="spec-card__title">Display</h3>
+              <p class="spec-card__value">6.9&Prime; Super Retina XDR</p>
+              <span class="spec-card__more">
+                View details <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              </span>
+            </button>
+
+            <button class="spec-card" type="button" data-modal="modal-camera">
+              <i class="fa-solid fa-camera spec-card__icon" aria-hidden="true"></i>
+              <h3 class="spec-card__title">Camera</h3>
+              <p class="spec-card__value">200&nbsp;MP quad system</p>
+              <span class="spec-card__more">
+                View details <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              </span>
+            </button>
+
+            <button class="spec-card" type="button" data-modal="modal-chip">
+              <i class="fa-solid fa-microchip spec-card__icon" aria-hidden="true"></i>
+              <h3 class="spec-card__title">Chip</h3>
+              <p class="spec-card__value">A20&nbsp;Pro, 2&nbsp;nm</p>
+              <span class="spec-card__more">
+                View details <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== ORDER ===================== -->
+      <section class="section order" id="order" data-finish="black">
+        <div class="container order__inner">
+          <p class="section__eyebrow">Order</p>
+          <h2 class="section__title">From $1,099.</h2>
+          <p class="section__lead">
+            Or $45.79 per month for 24&nbsp;months. Trade in your current iPhone
+            and save up to&nbsp;$600.
+          </p>
+
+          <div class="order__colors" role="group" aria-label="Choose a finish">
+            <button
+              class="swatch swatch--black is-active"
+              type="button"
+              aria-pressed="true"
+              aria-label="Space Black finish"
+              data-finish="black"
+              data-name="Space Black"
+            ></button>
+            <button
+              class="swatch swatch--natural"
+              type="button"
+              aria-pressed="false"
+              aria-label="Natural Titanium finish"
+              data-finish="natural"
+              data-name="Natural Titanium"
+            ></button>
+            <button
+              class="swatch swatch--crimson"
+              type="button"
+              aria-pressed="false"
+              aria-label="Crimson finish"
+              data-finish="crimson"
+              data-name="Crimson"
+            ></button>
+            <button
+              class="swatch swatch--sky"
+              type="button"
+              aria-pressed="false"
+              aria-label="Sky Blue finish"
+              data-finish="sky"
+              data-name="Sky Blue"
+            ></button>
+          </div>
+
+          <p class="order__finish" id="orderFinish" aria-live="polite">Space Black</p>
+
+          <a class="btn btn--primary btn--lg" href="#hero">
+            Pre-order now
+          </a>
+          <p class="order__note">
+            Concept design for coursework. Not affiliated with Apple&nbsp;Inc.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="footer" id="footer">
+      <div class="container footer__inner">
+        <div class="footer__brand">
+          <i class="fa-brands fa-apple" aria-hidden="true"></i>
+          <span>iPhone 18</span>
+        </div>
+
+        <ul class="footer__social">
+          <li>
+            <a href="#hero" aria-label="Twitter"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+          </li>
+          <li>
+            <a href="#hero" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+          </li>
+          <li>
+            <a href="#hero" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+          </li>
+          <li>
+            <a href="#hero" aria-label="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
+          </li>
+          <li>
+            <a href="#hero" aria-label="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+          </li>
+        </ul>
+
+        <p class="footer__copy">
+          CS409 MP1 &middot; Concept page &middot; Photography and footage from
+          Pexels
+        </p>
+      </div>
+    </footer>
+
+    <!-- ===================== MODALS ===================== -->
+    <div class="modal" id="modal-display" role="dialog" aria-modal="true" aria-labelledby="modal-display-title" hidden>
+      <div class="modal__backdrop" data-modal-close></div>
+      <div class="modal__dialog">
+        <button class="modal__close" type="button" aria-label="Close dialog" data-modal-close>
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+        <p class="modal__eyebrow">Display</p>
+        <h3 class="modal__title" id="modal-display-title">Super Retina XDR</h3>
+        <p class="modal__text">
+          A 6.9-inch panel with a variable refresh rate that drops to 1&nbsp;Hz
+          when the screen is idle and climbs to 144&nbsp;Hz while you scroll.
+        </p>
+        <dl class="modal__specs">
+          <div><dt>Resolution</dt><dd>2868 &times; 1320 at 460&nbsp;ppi</dd></div>
+          <div><dt>Peak brightness</dt><dd>3,000 nits outdoors</dd></div>
+          <div><dt>Refresh rate</dt><dd>ProMotion 1&ndash;144&nbsp;Hz</dd></div>
+          <div><dt>Protection</dt><dd>Ceramic Shield 3</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-camera" role="dialog" aria-modal="true" aria-labelledby="modal-camera-title" hidden>
+      <div class="modal__backdrop" data-modal-close></div>
+      <div class="modal__dialog">
+        <button class="modal__close" type="button" aria-label="Close dialog" data-modal-close>
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+        <p class="modal__eyebrow">Camera</p>
+        <h3 class="modal__title" id="modal-camera-title">Pro Fusion system</h3>
+        <p class="modal__text">
+          Four lenses that hand off to each other without a visible seam, so a
+          10x shot looks like it came from the main sensor.
+        </p>
+        <dl class="modal__specs">
+          <div><dt>Main</dt><dd>200&nbsp;MP, &fnof;/1.4, sensor shift</dd></div>
+          <div><dt>Ultra Wide</dt><dd>48&nbsp;MP, &fnof;/1.9, 120&deg;</dd></div>
+          <div><dt>Telephoto</dt><dd>48&nbsp;MP tetraprism, 10x optical</dd></div>
+          <div><dt>Video</dt><dd>8K ProRes at 60&nbsp;fps</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-chip" role="dialog" aria-modal="true" aria-labelledby="modal-chip-title" hidden>
+      <div class="modal__backdrop" data-modal-close></div>
+      <div class="modal__dialog">
+        <button class="modal__close" type="button" aria-label="Close dialog" data-modal-close>
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+        <p class="modal__eyebrow">Chip</p>
+        <h3 class="modal__title" id="modal-chip-title">A20 Pro</h3>
+        <p class="modal__text">
+          Built on a second-generation 2&nbsp;nm process, with a Neural Engine
+          large enough to run a frontier model without touching the network.
+        </p>
+        <dl class="modal__specs">
+          <div><dt>CPU</dt><dd>6-core, 2 performance + 4 efficiency</dd></div>
+          <div><dt>GPU</dt><dd>20-core with hardware ray tracing</dd></div>
+          <div><dt>Neural Engine</dt><dd>16-core, 60&nbsp;TOPS</dd></div>
+          <div><dt>Memory</dt><dd>12&nbsp;GB unified, LPDDR6</dd></div>
+        </dl>
+      </div>
+    </div>
+  </body>
 </html>

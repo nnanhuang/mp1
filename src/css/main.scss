@@ -1,1 +1,1387 @@
-/* Your SCSS here. */
+@use "variables" as *;
+@use "mixins" as *;
+
+// =====================================================
+//  1. Custom properties
+//  SCSS variables are compiled away; these stay live in
+//  the browser so a single rule can retheme a component.
+// =====================================================
+:root {
+  --color-accent: #{$color-accent};
+  --color-accent-soft: #{$color-accent-soft};
+  --nav-height: #{$nav-height-lg};
+  --nav-fs: #{$nav-fs-lg};
+  --nav-brand-fs: #{$nav-brand-lg};
+  --nav-bg: rgba(11, 11, 13, 0);
+  --nav-border: transparent;
+  --dur-base: #{$dur-base};
+  --ease-out: #{$ease-out};
+}
+
+// =====================================================
+//  2. Reset & base
+// =====================================================
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  // Keeps an anchored heading clear of the sticky navbar.
+  scroll-padding-top: $nav-height-sm;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: $color-ink;
+  color: $color-text;
+  font-family: $font-sans;
+  font-size: $fs-body;
+  line-height: $lh-body;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+// Set by JS while a modal is open so the page behind cannot scroll.
+body.is-locked {
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: $fw-semi;
+  line-height: $lh-tight;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+// Respect an operating-system preference for reduced motion.
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// =====================================================
+//  3. Keyframes
+// =====================================================
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
+@keyframes slow-zoom {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+// =====================================================
+//  4. Layout primitives
+// =====================================================
+.container {
+  @include container;
+}
+
+.section {
+  position: relative;
+  width: 100%;
+  padding-block: $section-padding-y;
+
+  &--dark {
+    background-color: $color-black;
+  }
+}
+
+.section__head {
+  text-align: center;
+  margin-bottom: $space-8;
+}
+
+.section__eyebrow {
+  @include eyebrow;
+}
+
+.section__title {
+  font-size: $fs-h2;
+}
+
+.section__lead {
+  @include measure;
+  margin-top: $space-4;
+  color: $color-text-muted;
+  font-size: $fs-lead;
+  font-weight: $fw-light;
+}
+
+// ---- Button ----------------------------------------
+.btn {
+  @include flex-center;
+  @include focus-ring;
+  gap: $space-2;
+  padding: $space-3 $space-6;
+  border-radius: $radius-pill;
+  font-size: 0.9375rem;
+  font-weight: $fw-medium;
+  transition: background-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &--primary {
+    background-color: var(--color-accent);
+    color: #fff;
+
+    &:hover {
+      background-color: var(--color-accent-soft);
+    }
+  }
+
+  &--ghost {
+    border: 1px solid $color-border;
+    color: $color-text;
+
+    &:hover {
+      border-color: $color-text;
+      background-color: rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  &--lg {
+    padding: $space-4 $space-7;
+    font-size: 1.0625rem;
+  }
+}
+
+// =====================================================
+//  5. Navbar — sticky, resizing, position indicator
+// =====================================================
+.navbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: $z-nav;
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  transition: background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+
+  // The scrolled state only redefines custom properties; every
+  // dimension below reads them, so one rule resizes the whole bar.
+  &.is-scrolled {
+    --nav-height: #{$nav-height-sm};
+    --nav-fs: #{$nav-fs-sm};
+    --nav-brand-fs: #{$nav-brand-sm};
+    --nav-bg: rgba(11, 11, 13, 0.82);
+    --nav-border: #{$color-border};
+  }
+}
+
+.navbar__inner {
+  @include container;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-5;
+  height: var(--nav-height);
+  transition: height var(--dur-base) var(--ease-out);
+}
+
+.navbar__brand {
+  @include flex-center;
+  @include focus-ring;
+  gap: $space-2;
+  flex-shrink: 0;
+  font-size: var(--nav-brand-fs);
+  font-weight: $fw-semi;
+  letter-spacing: -0.02em;
+  transition: font-size var(--dur-base) var(--ease-out);
+
+  i {
+    color: var(--color-accent);
+  }
+}
+
+.navbar__list {
+  display: flex;
+  align-items: center;
+  gap: clamp(#{$space-3}, 2vw, #{$space-6});
+}
+
+.navbar__link {
+  @include focus-ring;
+  position: relative;
+  display: block;
+  padding-block: $space-2;
+  color: $color-text-muted;
+  font-size: var(--nav-fs);
+  font-weight: $fw-medium;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out),
+    font-size var(--dur-base) var(--ease-out);
+
+  // The underline that marks the current section.
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-accent);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  &:hover {
+    color: $color-text;
+  }
+
+  &.is-active {
+    color: $color-text;
+
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+}
+
+// Thin reading-progress line along the bottom edge of the bar.
+.navbar__progress {
+  height: 2px;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent),
+    var(--color-accent-soft)
+  );
+  transition: width 90ms linear;
+}
+
+.navbar__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: $space-2;
+  @include focus-ring;
+}
+
+.navbar__toggle-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  margin-inline: auto;
+  background-color: $color-text;
+  border-radius: 2px;
+  transition: transform var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+
+.navbar__toggle[aria-expanded="true"] {
+  .navbar__toggle-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .navbar__toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .navbar__toggle-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+// =====================================================
+//  6. Hero
+// =====================================================
+.hero {
+  // Vertical centring: the content box is centred by flex, so it stays
+  // centred at any viewport height without magic offsets.
+  @include flex-center(column);
+  position: relative;
+  min-height: 100vh;
+  padding-block: $nav-height-lg $space-9;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  background: url("../assets/hero.jpg") center / cover no-repeat;
+  animation: slow-zoom 2s $ease-out both;
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.42) 45%,
+    rgba(11, 11, 13, 0.96) 100%
+  );
+}
+
+.hero__content {
+  position: relative;
+  z-index: $z-base;
+}
+
+.hero__eyebrow {
+  @include eyebrow($color-text-muted);
+  animation: fade-up $dur-slow $ease-out 120ms both;
+}
+
+.hero__title {
+  font-size: $fs-h1;
+  font-weight: $fw-bold;
+  letter-spacing: -0.04em;
+  animation: fade-up $dur-slow $ease-out 220ms both;
+}
+
+.hero__tagline {
+  margin-top: $space-4;
+  color: $color-text-muted;
+  font-size: clamp(1.125rem, 2.4vw, 1.75rem);
+  font-weight: $fw-light;
+  animation: fade-up $dur-slow $ease-out 340ms both;
+}
+
+.hero__actions {
+  @include flex-center;
+  flex-wrap: wrap;
+  gap: $space-4;
+  margin-top: $space-7;
+  animation: fade-up $dur-slow $ease-out 460ms both;
+}
+
+.hero__scroll {
+  @include flex-center;
+  @include focus-ring;
+  position: absolute;
+  left: 50%;
+  bottom: $space-7;
+  z-index: $z-base;
+  width: 44px;
+  height: 44px;
+  margin-left: -22px;
+  color: $color-text-muted;
+  animation: bob 2.4s $ease-inout infinite;
+
+  &:hover {
+    color: $color-text;
+  }
+}
+
+// =====================================================
+//  7. Design
+// =====================================================
+.design__body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(#{$space-6}, 6vw, #{$space-9});
+}
+
+.design__phone {
+  @include flex-center;
+}
+
+// A phone-shaped bezel drawn in CSS, with the looping clip as its screen.
+.phone-frame {
+  position: relative;
+  width: min(250px, 70vw);
+  aspect-ratio: 9 / 19.5;
+  padding: 10px;
+  background: linear-gradient(150deg, #3a3a3f 0%, #0d0d0f 45%, #46464c 100%);
+  border-radius: 44px;
+  box-shadow: $shadow-lg;
+}
+
+.phone-frame__island {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  z-index: 2;
+  width: 88px;
+  height: 24px;
+  transform: translateX(-50%);
+  background-color: $color-black;
+  border-radius: $radius-pill;
+}
+
+.phone-frame__screen {
+  @include cover-media;
+  border-radius: 34px;
+  background-color: $color-black;
+}
+
+.design__item {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  padding-block: $space-5;
+  border-bottom: 1px solid $color-border;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  i {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    line-height: 2.75rem;
+    text-align: center;
+    color: var(--color-accent);
+    font-size: 1.125rem;
+    background-color: rgba(255, 45, 70, 0.12);
+    border-radius: $radius-md;
+  }
+
+  h3 {
+    font-size: $fs-h3;
+  }
+
+  p {
+    margin-top: $space-2;
+    color: $color-text-muted;
+    font-weight: $fw-light;
+  }
+}
+
+// =====================================================
+//  8. Parallax break — fixed background image
+// =====================================================
+.parallax {
+  @include flex-center(column);
+  min-height: 78vh;
+  text-align: center;
+  background-image: url("../assets/bg-fixed.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.parallax__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.parallax__content {
+  position: relative;
+  z-index: $z-base;
+}
+
+.parallax__title {
+  font-size: $fs-h2;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+}
+
+.parallax__text {
+  @include measure(52ch);
+  margin-top: $space-4;
+  font-size: $fs-lead;
+  font-weight: $fw-light;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.6);
+}
+
+// =====================================================
+//  9. Features — multi-column grid
+// =====================================================
+.features {
+  background-color: $color-light;
+  color: $color-text-dark;
+
+  .section__title {
+    color: $color-text-dark;
+  }
+
+  .section__lead {
+    color: $color-text-dark-muted;
+  }
+}
+
+.features__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $space-5;
+}
+
+.feature-card {
+  padding: $space-6;
+  background-color: $color-light-alt;
+  border: 1px solid $color-border-dark;
+  border-radius: $radius-lg;
+  transition: transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.feature-card__icon {
+  display: block;
+  margin-bottom: $space-4;
+  color: var(--color-accent);
+  font-size: 1.75rem;
+}
+
+.feature-card__title {
+  font-size: $fs-h3;
+  color: $color-text-dark;
+}
+
+.feature-card__text {
+  margin-top: $space-3;
+  color: $color-text-dark-muted;
+  font-weight: $fw-light;
+}
+
+// =====================================================
+//  10. Carousel
+// =====================================================
+.carousel {
+  position: relative;
+}
+
+.carousel__viewport {
+  overflow: hidden;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+}
+
+.carousel__track {
+  display: flex;
+  transition: transform $dur-slow $ease-inout;
+}
+
+.carousel__slide {
+  position: relative;
+  flex: 0 0 100%;
+  aspect-ratio: 16 / 9;
+  background-color: $color-surface;
+}
+
+.carousel__image {
+  @include cover-media;
+}
+
+.carousel__caption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: $space-8 $space-6 $space-6;
+  text-align: left;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.78) 100%
+  );
+
+  h3 {
+    font-size: $fs-h3;
+  }
+
+  p {
+    margin-top: $space-1;
+    color: rgba(255, 255, 255, 0.76);
+    font-weight: $fw-light;
+  }
+}
+
+.carousel__arrow {
+  @include flex-center;
+  @include focus-ring;
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 3rem;
+  height: 3rem;
+  margin-top: -1.5rem;
+  color: #fff;
+  font-size: 1.0625rem;
+  background-color: rgba(0, 0, 0, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  backdrop-filter: blur(8px);
+  transition: background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+
+  &:hover {
+    background-color: var(--color-accent);
+    transform: scale(1.08);
+  }
+
+  &--prev {
+    left: $space-4;
+  }
+
+  &--next {
+    right: $space-4;
+  }
+}
+
+.carousel__dots {
+  @include flex-center;
+  gap: $space-2;
+  margin-top: $space-5;
+}
+
+.carousel__dot {
+  @include focus-ring;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  transition: background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.55);
+  }
+
+  &.is-active {
+    background-color: var(--color-accent);
+    transform: scale(1.35);
+  }
+}
+
+// =====================================================
+//  11. Film
+// =====================================================
+.film {
+  overflow: hidden;
+}
+
+.film__body {
+  display: grid;
+  // Narrower than the page container so the copy and the clip stay
+  // visually paired instead of drifting to opposite edges.
+  max-width: 900px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(#{$space-6}, 6vw, #{$space-8});
+}
+
+.film__intro {
+  text-align: left;
+}
+
+.film__lead {
+  margin-inline: 0;
+  max-width: 38ch;
+}
+
+.film__meta {
+  display: flex;
+  gap: $space-7;
+  margin-top: $space-7;
+
+  li {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.film__meta-value {
+  color: var(--color-accent);
+  font-size: 2rem;
+  font-weight: $fw-semi;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.film__meta-label {
+  margin-top: $space-1;
+  color: $color-text-muted;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+// The player. Hovering, focusing or tapping the frame starts playback,
+// so the browser's default control bar is not needed.
+.film__frame {
+  position: relative;
+  width: min(300px, 78vw);
+  aspect-ratio: 9 / 16;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: transform $dur-base $ease-out;
+  @include focus-ring;
+
+  // Ambient glow picked up from the red of the footage itself.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -14%;
+    z-index: -1;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 45, 70, 0.55) 0%,
+      rgba(255, 45, 70, 0) 68%
+    );
+    filter: blur(44px);
+    opacity: 0.55;
+    transition: opacity $dur-slow $ease-out;
+  }
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-4px);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+.film__video {
+  @include cover-media;
+  border-radius: $radius-lg;
+  background-color: $color-black;
+  box-shadow: $shadow-lg;
+}
+
+.film__overlay {
+  @include flex-center(column);
+  position: absolute;
+  inset: 0;
+  gap: $space-4;
+  border-radius: $radius-lg;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+  transition: opacity $dur-base $ease-out;
+
+  // Faded out by JS once the clip is running.
+  .film__frame.is-playing & {
+    opacity: 0;
+  }
+}
+
+.film__play {
+  @include flex-center;
+  width: 4.25rem;
+  height: 4.25rem;
+  padding-left: 4px; // optically centres the triangle
+  color: #fff;
+  font-size: 1.25rem;
+  background-color: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+  transition: background-color $dur-base $ease-out,
+    transform $dur-base $ease-out;
+
+  .film__frame:hover & {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: scale(1.08);
+  }
+}
+
+.film__hint {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.8125rem;
+  font-weight: $fw-medium;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+// A touch screen has no hover state, so it gets the tap wording instead.
+.film__hint--tap {
+  display: none;
+}
+
+@media (hover: none) {
+  .film__hint--hover {
+    display: none;
+  }
+
+  .film__hint--tap {
+    display: inline;
+  }
+}
+
+// =====================================================
+//  12. Specs & modal
+// =====================================================
+.specs__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $space-5;
+}
+
+.spec-card {
+  @include focus-ring;
+  padding: $space-6;
+  text-align: left;
+  background-color: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  transition: background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+
+  &:hover {
+    background-color: $color-surface-alt;
+    border-color: rgba(255, 255, 255, 0.24);
+    transform: translateY(-6px);
+
+    .spec-card__more i {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.spec-card__icon {
+  display: block;
+  margin-bottom: $space-4;
+  color: var(--color-accent);
+  font-size: 1.625rem;
+}
+
+.spec-card__title {
+  font-size: $fs-h3;
+}
+
+.spec-card__value {
+  margin-top: $space-2;
+  color: $color-text-muted;
+  font-weight: $fw-light;
+}
+
+.spec-card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  margin-top: $space-5;
+  color: var(--color-accent);
+  font-size: 0.875rem;
+  font-weight: $fw-medium;
+
+  i {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+}
+
+// ---- Modal -----------------------------------------
+.modal {
+  // Centres the dialog on both axes at any viewport size.
+  @include flex-center;
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal;
+  padding: $space-5;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  animation: fade-in $dur-base $ease-out both;
+}
+
+.modal__dialog {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: $space-7;
+  background-color: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  animation: modal-in $dur-base $ease-out both;
+}
+
+.modal__close {
+  @include flex-center;
+  @include focus-ring;
+  position: absolute;
+  top: $space-4;
+  right: $space-4;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: $color-text-muted;
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 50%;
+  transition: color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+
+  &:hover {
+    color: $color-text;
+    background-color: rgba(255, 255, 255, 0.16);
+  }
+}
+
+.modal__eyebrow {
+  @include eyebrow;
+}
+
+.modal__title {
+  font-size: 1.875rem;
+}
+
+.modal__text {
+  margin-top: $space-4;
+  color: $color-text-muted;
+  font-weight: $fw-light;
+}
+
+.modal__specs {
+  margin: $space-6 0 0;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+    gap: $space-4;
+    padding-block: $space-3;
+    border-bottom: 1px solid $color-border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  dt {
+    color: $color-text-muted;
+    font-size: 0.9375rem;
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    font-size: 0.9375rem;
+    font-weight: $fw-medium;
+  }
+}
+
+// =====================================================
+//  13. Order
+// =====================================================
+// Each finish is a pair of custom properties. Clicking a swatch only
+// swaps the section's data-finish attribute, so the palette itself
+// lives here in the stylesheet rather than in the script.
+.order {
+  --finish-bg: #0f0f12;
+  --finish-glow: rgba(255, 255, 255, 0.1);
+
+  background-color: var(--finish-bg);
+  transition: background-color $dur-slow $ease-out;
+
+  &[data-finish="black"] {
+    --finish-bg: #0f0f12;
+    --finish-glow: rgba(190, 196, 214, 0.16);
+  }
+
+  &[data-finish="natural"] {
+    --finish-bg: #1a1510;
+    --finish-glow: rgba(200, 191, 180, 0.22);
+  }
+
+  &[data-finish="crimson"] {
+    --finish-bg: #1e0b11;
+    --finish-glow: rgba(255, 45, 70, 0.26);
+  }
+
+  &[data-finish="sky"] {
+    --finish-bg: #0c131d;
+    --finish-glow: rgba(157, 184, 212, 0.24);
+  }
+
+  // The halo keeps its shape while the hue underneath cross-fades.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      120% 85% at 50% 0%,
+      var(--finish-glow) 0%,
+      rgba(0, 0, 0, 0) 64%
+    );
+  }
+}
+
+.order__inner {
+  @include flex-center(column);
+  position: relative; // sits above the halo
+  text-align: center;
+}
+
+.order__colors {
+  @include flex-center;
+  gap: $space-3;
+  margin: $space-7 0 $space-4;
+}
+
+.order__finish {
+  margin-bottom: $space-6;
+  font-size: 0.9375rem;
+  font-weight: $fw-medium;
+  letter-spacing: 0.02em;
+}
+
+.swatch {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  transition: transform var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+  @include focus-ring;
+
+  &:hover {
+    transform: scale(1.12);
+  }
+
+  &.is-active {
+    border-color: rgba(255, 255, 255, 0.92);
+    transform: scale(1.06);
+  }
+
+  &--black {
+    background-color: #1d1d1f;
+  }
+  &--natural {
+    background-color: #c8bfb4;
+  }
+  &--crimson {
+    background-color: #a3223a;
+  }
+  &--sky {
+    background-color: #9db8d4;
+  }
+}
+
+.order__note {
+  margin-top: $space-5;
+  color: $color-text-muted;
+  font-size: 0.8125rem;
+}
+
+// =====================================================
+//  14. Footer
+// =====================================================
+.footer {
+  padding-block: $space-8;
+  background-color: $color-black;
+  border-top: 1px solid $color-border;
+}
+
+.footer__inner {
+  @include flex-center(column);
+  gap: $space-5;
+  text-align: center;
+}
+
+.footer__brand {
+  @include flex-center;
+  gap: $space-2;
+  font-size: 1.125rem;
+  font-weight: $fw-semi;
+
+  i {
+    color: var(--color-accent);
+  }
+}
+
+.footer__social {
+  display: flex;
+  gap: $space-3;
+
+  a {
+    @include flex-center;
+    @include focus-ring;
+    width: 2.75rem;
+    height: 2.75rem;
+    color: $color-text-muted;
+    font-size: 1.125rem;
+    border: 1px solid $color-border;
+    border-radius: 50%;
+    transition: color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+
+    &:hover {
+      color: #fff;
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      transform: translateY(-3px);
+    }
+  }
+}
+
+.footer__copy {
+  color: $color-text-muted;
+  font-size: 0.8125rem;
+}
+
+// =====================================================
+//  15. Responsive
+//  Checked at 1920x1080, 1366x768, 1280x720, 1024x768
+//  and 768x1024.
+// =====================================================
+@include respond("lg") {
+  .features__grid {
+    gap: $space-4;
+  }
+}
+
+@include respond("md") {
+  .design__body {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: left;
+  }
+
+  .design__list {
+    width: min(520px, 100%);
+  }
+
+  .features__grid,
+  .specs__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .film__body {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .film__intro {
+    text-align: center;
+  }
+
+  .film__lead {
+    margin-inline: auto;
+  }
+
+  .film__meta {
+    justify-content: center;
+  }
+
+  .specs__grid .spec-card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@include respond("sm") {
+  .navbar__list {
+    gap: $space-3;
+  }
+
+  .navbar__link {
+    font-size: calc(var(--nav-fs) - 0.0625rem);
+  }
+
+  // A fixed background image is unreliable on mobile browsers, which
+  // size the viewport differently while the URL bar hides.
+  .parallax {
+    background-attachment: scroll;
+    min-height: 60vh;
+  }
+
+  .carousel__slide {
+    aspect-ratio: 4 / 3;
+  }
+
+  .film__meta {
+    gap: $space-6;
+  }
+
+  .film__meta-value {
+    font-size: 1.625rem;
+  }
+
+  .carousel__caption {
+    padding: $space-7 $space-4 $space-4;
+  }
+
+  .carousel__arrow {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-top: -1.25rem;
+
+    &--prev {
+      left: $space-2;
+    }
+    &--next {
+      right: $space-2;
+    }
+  }
+
+  .modal__dialog {
+    padding: $space-6 $space-5;
+  }
+}
+
+@include respond("xs") {
+  // Only below the graded resolutions does the menu collapse, so the
+  // position indicator stays visible at every size we are marked on.
+  .navbar__toggle {
+    display: flex;
+  }
+
+  .navbar__nav {
+    position: absolute;
+    inset: var(--nav-height) 0 auto 0;
+    background-color: rgba(11, 11, 13, 0.97);
+    border-bottom: 1px solid $color-border;
+    transform: translateY(-8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out),
+      visibility var(--dur-base) var(--ease-out);
+
+    &.is-open {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .navbar__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: $space-3 $container-gutter $space-5;
+  }
+
+  .navbar__link {
+    padding-block: $space-3;
+    font-size: 1rem;
+
+    &::after {
+      width: 28px;
+    }
+  }
+
+  .features__grid,
+  .specs__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .specs__grid .spec-card:last-child {
+    grid-column: auto;
+  }
+
+  .modal__specs > div {
+    flex-direction: column;
+    gap: $space-1;
+  }
+
+  .modal__specs dd {
+    text-align: left;
+  }
+}
